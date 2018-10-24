@@ -1,0 +1,80 @@
+--------------------------
+AIDL - Expose service
+A service can expose set of functions that can be access by other process/application. Exposed functions are required to be declared in .aidl file at following location
+http://processors.wiki.ti.com/index.php/Android-Adding_SystemService
+--------------------------
+
+/* add the following to frameworks/base/core/java/android/os */
+ISerialSysService.aidl
+
+/* add the following to frameworks/base */
+## READ ME: ########################################################
+LOCAL_SRC_FILES += \
+	core/java/android/os/ISerialSysService.aidl \
+
+	||
+	\/ generating
+
+ISerialSysService.java in /out files where you have to overrides
+
+
+
+
+--------------------------
+Service
+--------------------------
+
+/* add the following folder to frameworks-base/services */
+1. serialsys
+
+/* add the following to frameworks-base/services/Android.mk */
+# Services that will be built as part of services.jar
+# These should map to directory names relative to this
+# Android.mk.
+services := \
+    serialsys \
+
+/* add the following folder and file to frameworks-base/services/serialsys */
+1. "java" folder
+2. Add the provided "Android.mk" file
+
+/* add the following folder to frameworks-base/services/serialsys/java */
+1. "com" folder
+
+/* add the following folder to frameworks-base/services/serialsys/java/com */
+1. "android" folder
+
+/* add the following folder to frameworks-base/services/serialsys/java/com/android */
+1. "server" folder
+
+/* add the following folder to frameworks-base/services/serialsys/java/com/android/server/ */
+1. "serialsys" folder
+
+/* add the following file to the frameworks-base/services/serialsys/java/com/android/server/serialsys folder */
+1. Add "SerialSysService.java"	
+
+
+--------------------------
+JNI
+--------------------------	
+/*add the following to frameworks/base/services/core/jni/onload.cpp */
+int register_android_server_SerialSysService(JNIEnv* env);
+register_android_server_SerialSysService(env);
+
+
+/* add the following to frameworks/base/services/core/jni/ */
+com_android_server_SerialSysService.cpp
+
+/* add the following to frameworks-base/services/core/jni/Android.mk */
+LOCAL_SRC_FILES += \
+    $(LOCAL_REL_DIR)/com_android_server_SerialSysService.cpp \
+
+
+
+
+
+
+
+
+
+

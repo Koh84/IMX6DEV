@@ -1,0 +1,53 @@
+--------------------------
+Android studio app
+--------------------------
+/* call this from /androidosapps/app/src/main/java/com/example/kelvinkoh/testapplication/ */
+MainActivity.java
+
+--------------------------
+This uses the provided serice
+--------------------------
+/* add the following to frameworks-base/core/java/android/os/ConRFIDsysManager.java */
+
+
+
+----------------------------------------------------
+Create a string for service
+----------------------------------------------------
+/* add the following to frameworks-base/core/java/android/content/Context.java */
+@StringDef({
+            CONRFIDSYS_SERVICE,
+public static final String CONRFIDSYS_SERVICE = "conrfidsys";
+
+
+----------------------------------------------------
+This create and register the service
+----------------------------------------------------
+/* add the following to frameworks-base/core/java/android/app/ContextImpl.java */
+	import android.os.ConRFIDsysManager;
+	import android.os.IConRFIDsysService;
+
+	// SM CONRFIDSYS_SERVICE
+        registerService(CONRFIDSYS_SERVICE, new ServiceFetcher() 
+	{
+                public Object createService(ContextImpl ctx) {
+                IBinder b = ServiceManager.getService(CONRFIDSYS_SERVICE);
+                return new ConRFIDsysManager(ctx, IConRFIDsysService.Stub.asInterface(b));//	IConRFIDsysService
+        }});
+
+
+----------------------------------------------------
+This create and register the service
+----------------------------------------------------
+/* add the following to services/java/com/android/server/SystemServer.java */
+
+
+            // SM
+           if(!disableNonCoreServices) {
+    	       try {
+                   Slog.i(TAG, "Condeco RFID Service");
+                   ServiceManager.addService(Context.CONRFIDSYS_SERVICE, new ConRFIDService(context));
+               } catch (Throwable e) {
+                   reportWtf("Failure starting ConRFIDService Service", e);
+               }
+           }

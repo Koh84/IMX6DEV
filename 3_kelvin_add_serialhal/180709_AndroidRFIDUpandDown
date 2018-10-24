@@ -1,0 +1,158 @@
+
+(Application layer)
+------------------------------------------------------------------------------------------	
+Using service
+To use service
+
+first get service handle using "ServiceManager.getService()" api
+use service handle to call set of functions exposed by service
+http://processors.wiki.ti.com/index.php/Android-Adding_SystemService
+------------------------------------------------------------------------------------------
+MainActivity.java	  androidosapps/app/src/main/java/com/example/kelvinkoh/testapplication/
+	=>        
+        IBinder b = ServiceManager.getService("conrfidsys");
+        if (b == null)
+        {
+            throw new RuntimeException("rfid Service not available");
+        }
+        RFIDservice = IConRFIDsysService.Stub.asInterface(b);
+
+
+example:
+	RFIDservice.read_timed(50, timeout);
+------------------------------------------------------------------------------------------
+
+
+(System layer)
+------------------------------------------------------------------------------------------
+
+Context.java		  frameworks/base/core/java/android/content/
+	=> @StringDef({CONRFIDSYS_SERVICE,
+
+	=> public static final String CONRFIDSYS_SERVICE = "conrfidsys";
+	
+------------------------------------------------------------------------------------------
+	||
+	\/
+------------------------------------------------------------------------------------------
+/* Register service in SystemServer.java */
+SystemServer.java	  services/java/com/android/server/
+ 	=> if(!disableNonCoreServices) {
+    	       try {
+                   Slog.i(TAG, "Condeco RFID Service");
+                   ServiceManager.addService(Context.CONRFIDSYS_SERVICE, new ConRFIDService(context));
+               } catch (Throwable e) {
+                   reportWtf("Failure starting ConRFIDService Service", e);
+               }
+           }
+------------------------------------------------------------------------------------------
+
+
+(AIDL layer)
+------------------------------------------------------------------------------------------
+*make update-api - this is automatically updated
+
+current.txt 		  frameworks-base/api/ #function prototype
+system-current.txt	  frameworks-base/api/ #define service
+
+------------------------------------------------------------------------------------------
+	||
+	\/
+--------------------------------------------------------------------------
+
+/* A service can expose set of functions that can be access by other process/application. Exposed functions are required to be declared in .aidl file at following location */
+IConRFIDsysService.aidl	  frameworks/base/core/java/android/os
+	||
+	\/
+/* open frameworks/base/Android.mk and add following line */
+Add [service].aidl for build
+	||
+	\/
+IConRFIDService.java	  /out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/core/java/android/os
+------------------------------------------------------------------------------------------
+	||
+	\/
+(Service layer)
+--------------------------------------------------------------------------
+add new file Android.mk
+
+ConRFIDService.java  	  frameworks/base/services/conrfid/java/com/android/server/conrfid
+	public String read_timed(int maxLength, int timeout)
+		length = read_timed_native(mNativePointer, buffer, timeout);
+------------------------------------------------------------------------------------------
+	||
+	\/
+(JNI layer)
+--------------------------------------------------------------------------
+add extra line in Android.mk
+
+com_android_server_ConRFIDService.cpp frameworks/base/services/core/jni/
+	static int read_timed_native(JNIEnv *env, jobject clazz, int ptr, jbyteArray buffer, int timeout)
+		 length = dev->read_timed(dev, (char*) real_byte_array, env->GetArrayLength(buffer), timeout);
+
+------------------------------------------------------------------------------------------	
+	||
+	\/
+(HAL layer)
+--------------------------------------------------------------------------
+Android.mk
+
+conrfidsyshw.h 		 hardware/libhardware/include/hardware/
+	||
+	\/
+conrfidsyshw.c		 hardware/libhardware/modules/conrfidsyshw/
+	 dev->read_timed =  conrfidsyshw_read_timed;
+		int conrfidsyshw_read_timed(rfid_device_t* dev,  char* buffer, int length, int timeout)
+--------------------------------------------------------------------------
+	||
+	\/
+(Linux driver or Daemons layer)
+--------------------------------------------------------------------------
+Access to daemons or linux driver
+--------------------------------------------------------------------------
+
+
+NOTE:
+A Service is an application component that can perform long-running operations in the background and does not provide a user interface. Another application component can start a service and it will continue to run in the background even if the user switches to another application. Additionally, a component can bind to a service to interact with it and even perform interprocess communication (IPC). For example, a service might handle network transactions, play music, perform file I/O, or interact with a content provider, all from the background.
+
+
+
+------------------------------------------------------------------------------------------
+????Obsolete - ConRFIDsysManager.java 	   frameworks-base/core/java/android/os/
+
+example:
+	public String read_timed(int maxLength, int timeout)
+		mService.read_timed(maxLength, timeout);
+------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------
+????? - Don't think this is used
+ContextImpl.java	  frameworks/base/core/java/android/app/
+	=> import android.os.ConRFIDsysManager;
+	=> registerService(CONRFIDSYS_SERVICE, new ServiceFetcher() 
+	{
+		public Object createService(ContextImpl ctx) 
+		{
+		     IBinder b = ServiceManager.getService(CONRFIDSYS_SERVICE);
+		     return new ConRFIDsysManager(ctx, IConRFIDsysService.Stub.asInterface(b));
+		     //IConRFIDsysService
+                }
+	});
+
+------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

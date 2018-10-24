@@ -1,0 +1,14 @@
+/* add the following to hardware-libhardware/modules/Android.mk */
+hardware_modules := \
+    serialsyshw \
+/* add the following to hardware/libhardware/modules/serialsyshw */
+Android.mk
+serialsyshw.c
+
+/* add the following to hardware/libhardware/include/hardware */
+serialsyshw.h
+
+/* add the following to device-fsl/imx6/imx6.mk */
+# imx6 Hardware HAL libs.
+PRODUCT_PACKAGES += \
+	serialsyshw.default			\

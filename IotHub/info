@@ -1,0 +1,50 @@
+--------------------------------------------------
+Information
+--------------------------------------------------
+Resource Group : KelvinCloudService1
+
+Iot hub name : KelvinIotHub
+
+Region : UK
+
+Device ID : KelvinRaspberryPi
+
+Connection string (primary key) for Raspberry Pi
+HostName=KelvinIotHub.azure-devices.net;DeviceId=KelvinRaspberryPi;SharedAccessKey=mcdOyLETRL3lkUVIbZB/prun3fK23pKP8zA6zLjQkWs=
+
+Connection string (primary key ) for iothubowner
+HostName=KelvinIotHub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q2y7hY2k2G1J4Afxbl122wmOeItJHL70+wYcDhMNBP8=
+
+
+
+
+--------------------------------------------------
+Login to IOT hub using terminal and send string
+--------------------------------------------------
+iothub-explorer login 'HostName=KelvinIotHub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q2y7hY2k2G1J4Afxbl122wmOeItJHL70+wYcDhMNBP8='
+
+iothub-explorer send KelvinRaspberryPi abc
+
+--------------------------------------------------
+Monitor via iothub-explorer the events send from device
+--------------------------------------------------
+
+iothub-explorer monitor-events KelvinRaspberryPi --login "HostName=KelvinIotHub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=Q2y7hY2k2G1J4Afxbl122wmOeItJHL70+wYcDhMNBP8="
+
+
+
+--------------------------------------------------
+Send message from device to iothub-explorer
+--------------------------------------------------
+./app 'HostName=KelvinIotHub.azure-devices.net;DeviceId=KelvinRaspberryPi;SharedAccessKey=mcdOyLETRL3lkUVIbZB/prun3fK23pKP8zA6zLjQkWs='
+
+--------------------------------------------------
+xlogging.h issue
+fatal error: azure_c_shared_utility/xlogging.h: No such file or directory 
+--------------------------------------------------
+https://github.com/Azure-Samples/iot-hub-c-raspberrypi-client-app/issues/22
+
+--------------------------------------------------
+JSON issue
+Error: App does not get created with current git master in azure-iothub-c-sdk (JSON problem?) #25
+--------------------------------------------------

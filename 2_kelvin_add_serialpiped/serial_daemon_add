@@ -1,0 +1,30 @@
+/* under system/core/rootdir/init.rc */
+/* add following under on post-fs-data*/
+mkdir /data/misc/serialpipe 0777 system system 
+
+/* under system/core/rootdir/Android.mk */
+/* add following under SANITIZE_ASAN_OPTIONS_FOR := \ */
+serialpiped \
+
+/*move the whole serialpiped folder to system/core*/
+
+/*under device/fsl/init.rc add the following*/
+should i start the service??????????
+
+/*under device-fsl/imx6/imx6.mk add the following*/
+PRODUCT_PACKAGES += \
+	serialpiped \
+
+/*under device-fsl/imx6/sepolicy/file_contexts add the following */
+/system/bin/serialpiped        u:object_r:serialmanagerd_exec:s0
+
+/*under device-fsl/imx6/sepolicy add the following */
+serialmanagerd.te
+
+
+/*under device-fsl/sabresd_6dq/ueventd.freescale.rc change the following */
+/dev/ttymxc2              0660   system     system
+
+/*under device-fsl/sabresd_6dq/BoardConfig.mk add the following */
+BOARD_KERNEL_CMDLINE := androidboot.selinux=permissive
+

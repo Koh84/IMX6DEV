@@ -1,0 +1,32 @@
+/*in system/core/rootdir/Android.mk */
+/*add rfidmanagerd*/
+
+SANITIZE_ASAN_OPTIONS_FOR := \
+  rfidmanagerd \
+
+
+/*in system/core/ */
+/*add rfidmanagerd folder*/
+
+rfidmanagerd/Android.mk
+rfidmanagerd/comm.c
+rfidmanagerd/comm.h
+rfidmanagerd/defs.h
+rfidmanagerd/ini.c
+rfidmanagerd/ini.h
+rfidmanagerd/lpc.c
+rfidmanagerd/lpc.h
+rfidmanagerd/lpcispmode.c
+rfidmanagerd/lpcispmode.h
+rfidmanagerd/rfid.bin
+rfidmanagerd/rfidcomms.c
+rfidmanagerd/rfidmanagerd.c
+rfidmanagerd/rfidmanagerd.conf
+rfidmanagerd/rfidmanagerd.rc
+rfidmanagerd/uu.c
+rfidmanagerd/uu.h
+
+/*in system/core/rfidmanagerd/Android.mk */
+/*add rfidmanagerd folder*/
+
+

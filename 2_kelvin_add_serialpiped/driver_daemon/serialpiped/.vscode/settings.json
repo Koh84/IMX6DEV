@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "lpcispmode.h": "c",
+        "comm.h": "c"
+    }
+}
